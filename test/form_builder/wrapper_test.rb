@@ -150,6 +150,18 @@ class WrapperTest < ActionView::TestCase
     end
   end
 
+  test 'single element wrapper of false applies options to component tags' do
+    swap_wrapper :default, self.custom_wrapper_with_no_wrapping_tag do
+      with_form_for @user, :name
+      assert_select "div.custom_wrapper div.elem input.input_class_yo"
+      assert_select "div.custom_wrapper div.elem label[data-yo='yo']"
+      assert_select "div.custom_wrapper div.elem span.custom_yo", :text => "custom"
+      assert_select "div.custom_wrapper div.elem label.both_yo"
+      assert_select "div.custom_wrapper div.elem input.both_yo"
+      assert_no_select "div.custom_wrapper div.elem .no_effect_yo"
+    end
+  end
+
   test 'do not duplicate label classes for different inputs' do
     swap_wrapper :default, self.custom_wrapper_with_label_html_option do
       with_concat_form_for(@user) do |f|
