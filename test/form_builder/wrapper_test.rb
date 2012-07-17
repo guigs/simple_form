@@ -150,15 +150,41 @@ class WrapperTest < ActionView::TestCase
     end
   end
 
-  test 'single element wrapper of false applies options to component tags' do
+  test 'single element without tags applies options to component tags' do
     swap_wrapper :default, self.custom_wrapper_with_no_wrapping_tag do
       with_form_for @user, :name
       assert_select "div.custom_wrapper div.elem input.input_class_yo"
+      assert_select "div.custom_wrapper div.elem input.other_class_yo"
+      assert_select "div.custom_wrapper div.elem input.string"
       assert_select "div.custom_wrapper div.elem label[data-yo='yo']"
       assert_select "div.custom_wrapper div.elem span.custom_yo", :text => "custom"
       assert_select "div.custom_wrapper div.elem label.both_yo"
       assert_select "div.custom_wrapper div.elem input.both_yo"
-      assert_no_select "div.custom_wrapper div.elem .no_effect_yo"
+    end
+  end
+
+  test 'single elment with wrap with and other options does both' do
+    swap_wrapper :default, self.custom_wrapper_with_no_wrapping_tag_and_wrapping_tag do
+      with_form_for @user, :name
+      assert_no_select "div.custom_wrapper > input"
+      assert_select "div.custom_wrapper div.wrap input.input_class_yo"
+      assert_select "div.custom_wrapper div.wrap input.other_class_yo"
+    end
+  end
+
+
+  test 'adding meaningless options to components does nothing' do
+    with_concat_form_for @user do |f|
+      concat f.input :name, :invalid => 'thing'
+    end
+    assert_no_select "input[invalid='thing']"
+
+    swap_wrapper :default, self.custom_wrapper_with_wrong_wrapping_tag do
+      with_input_for @user, :name, :string, :placeholder => "username"
+      assert_select "input[invalid='thing']"
+      assert_no_select ".no_effect_yo"
+      assert_select "input.input_class_yo"
+      assert_select "input[placeholder='username']"
     end
   end
 

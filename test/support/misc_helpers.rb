@@ -49,12 +49,26 @@ module MiscHelpers
   def custom_wrapper_with_no_wrapping_tag
     SimpleForm.build :tag => :div, :class => "custom_wrapper" do |b|
       b.wrapper :tag => :div, :class => 'elem' do |component|
-        component.use :input, :wrap_with => { :tag => false, :class => 'input_class_yo'}
-        component.use :label, :wrap_with => { :tag => false, :"data-yo" => 'yo'}
-        component.use :hint, :wrap_with => { :tag => false, :class => 'no_effect_yo'}
-        component.use :label_input, :wrap_with => {:tag => false, :class => 'both_yo'}
-        component.use :custom_component, :wrap_with => { :tag => false, :class => 'custom_yo'}
+        component.use :input, :class => ['input_class_yo', 'other_class_yo']
+        component.use :label, :"data-yo" => 'yo'
+        component.use :label_input, :class => 'both_yo'
+        component.use :custom_component, :class => 'custom_yo'
       end
+    end
+  end
+
+  def custom_wrapper_with_no_wrapping_tag_and_wrapping_tag
+    SimpleForm.build :tag => :div, :class => 'custom_wrapper' do |b|
+      b.use :input, :class => ['input_class_yo', 'other_class_yo'], 
+        :wrap_with => { :tag => :div, :class => 'wrap' }
+    end
+  end
+
+  def custom_wrapper_with_wrong_wrapping_tag
+    SimpleForm.build :tag => :div, :class => "custom_wrapper" do |b|
+      b.use :placeholder
+      b.use :input, :class => 'input_class_yo', :invalid => 'thing'
+      b.use :hint, :class => 'no_effect_yo'
     end
   end
 
