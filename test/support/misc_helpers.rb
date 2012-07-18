@@ -66,9 +66,15 @@ module MiscHelpers
 
   def custom_wrapper_with_wrong_wrapping_tag
     SimpleForm.build :tag => :div, :class => "custom_wrapper" do |b|
-      b.use :placeholder
       b.use :input, :class => 'input_class_yo', :invalid => 'thing'
-      b.use :hint, :class => 'no_effect_yo'
+    end
+  end
+
+  def custom_wrapper_with_invalid_options
+    SimpleForm.build :tag => :div, :class => "custom_wrapper" do |b|
+      b.use :placeholder, :class => 'no_effect'
+      b.use :hint, :id => 'no_id', :class => 'no_effect'
+      b.use :input
     end
   end
 
@@ -169,4 +175,3 @@ module SimpleForm::Components::CustomComponent
 end
 
 SimpleForm::Inputs::Base.send(:include, SimpleForm::Components::CustomComponent)
-

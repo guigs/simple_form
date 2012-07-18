@@ -40,6 +40,11 @@ module SimpleForm
     # In the example above, hint defaults to false, which means it won't automatically
     # do the lookup anymore. It will only be triggered when :hint is explicitly set.
     class Builder
+
+      class_attribute :non_tag_components
+      self.non_tag_components = [:placeholder, :error, :hint, :html5, 
+        :maxlength, :min_max, :pattern, :readonly]
+ 
       def initialize(options)
         @options    = options
         @components = []
@@ -51,7 +56,12 @@ module SimpleForm
             "Please use wrapper instead of use."
           return wrapper(name, options, &block)
         end
-        
+
+        if options && (self.class.non_tag_components.include?(name) \
+                   && !(options.except(:wrap_with).keys.empty?))
+          warn "Invalid options #{options.except(:wrap_with).keys.inspect} passed to #{name}."
+        end
+       
         if options
           @components << Single.new(name, options) 
         else
