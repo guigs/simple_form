@@ -150,8 +150,8 @@ class WrapperTest < ActionView::TestCase
     end
   end
 
-  test 'single element without tags applies options to component tags' do
-    swap_wrapper :default, self.custom_wrapper_with_no_wrapping_tag do
+  test 'single element without wrap_with applies options to component tags' do
+    swap_wrapper :default, custom_wrapper_with_no_wrapping_tag do
       with_form_for @user, :name
       assert_select "div.custom_wrapper div.elem input.input_class_yo"
       assert_select "div.custom_wrapper div.elem input.other_class_yo"
@@ -163,8 +163,8 @@ class WrapperTest < ActionView::TestCase
     end
   end
 
-  test 'single elment with wrap with and other options does both' do
-    swap_wrapper :default, self.custom_wrapper_with_no_wrapping_tag_and_wrapping_tag do
+  test 'single element with wrap with and component options applies to both' do
+    swap_wrapper :default, custom_wrapper_with_wrapping_tag_and_component_options do
       with_form_for @user, :name
       assert_no_select "div.custom_wrapper > input"
       assert_select "div.custom_wrapper div.wrap input.input_class_yo"
@@ -172,19 +172,19 @@ class WrapperTest < ActionView::TestCase
     end
   end
 
-
-  test 'adding meaningless options to components does nothing' do
+  test 'adding any option to tag components on the input ignores them' do
     with_concat_form_for @user do |f|
       concat f.input :name, :invalid => 'thing'
     end
     assert_no_select "input[invalid='thing']"
+  end
 
-    swap_wrapper :default, self.custom_wrapper_with_wrong_wrapping_tag do
-      with_input_for @user, :name, :string, :placeholder => "username"
+  test 'adding any option to tag components in wrapper makes html attributes' do
+    swap_wrapper :default, custom_wrapper_with_wrong_wrapping_tag do
+      with_input_for @user, :name, :string, :other_invalid => 'other_thing'
       assert_select "input[invalid='thing']"
-      assert_no_select ".no_effect_yo"
       assert_select "input.input_class_yo"
-      assert_select "input[placeholder='username']"
+      assert_no_select "input[other_invalid='other_thing']"
     end
   end
 

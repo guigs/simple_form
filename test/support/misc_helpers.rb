@@ -57,7 +57,7 @@ module MiscHelpers
     end
   end
 
-  def custom_wrapper_with_no_wrapping_tag_and_wrapping_tag
+  def custom_wrapper_with_wrapping_tag_and_component_options
     SimpleForm.build :tag => :div, :class => 'custom_wrapper' do |b|
       b.use :input, :class => ['input_class_yo', 'other_class_yo'], 
         :wrap_with => { :tag => :div, :class => 'wrap' }

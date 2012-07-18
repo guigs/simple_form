@@ -28,17 +28,16 @@ module SimpleForm
       private
 
       def html_options_for_input(input, local_namespace = namespace)
-        (input.options["#{local_namespace}_html".intern] ||= {}).tap do |o|
-          if o[:class] or wrapper_html_options[:class]
-            o[:class] = Array.wrap(o[:class])
-            o[:class].concat Array.wrap(wrapper_html_options[:class])
-          end
-          o.merge! wrapper_html_options
+        options = ( input.options["#{local_namespace}_html".intern] ||= {} )
+        if options[:class] || wrapper_html_options[:class]
+          options[:class] = Array.wrap(options[:class])
+          options[:class].concat Array.wrap(wrapper_html_options[:class])
         end
+        options.merge! wrapper_html_options
       end
 
-      def html_options(options, input = nil)
-        [:label, :input].include?(namespace) ? {} : super(options)
+      def html_options(options)
+        [:label, :input].include?(namespace) ? {} : super
       end
     end
   end
