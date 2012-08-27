@@ -87,20 +87,4 @@ class ActionView::TestCase
   alias :validating_user_path :user_path
   alias :validating_users_path :user_path
   alias :other_validating_user_path :user_path
-
-  unless instance_methods.include? "capture_io"
-    def capture_io
-      require 'stringio'
-
-      orig_stdout, orig_stderr = $stdout, $stderr
-      captured_stdout, captured_stderr = StringIO.new, StringIO.new
-      $stdout, $stderr = captured_stdout, captured_stderr
-
-      yield
-      return captured_stdout.string, captured_stderr.string
-    ensure
-      $stdout = orig_stdout 
-      $stderr = orig_stderr
-    end
-  end
 end

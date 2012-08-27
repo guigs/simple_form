@@ -57,9 +57,9 @@ module SimpleForm
           return wrapper(name, options, &block)
         end
 
-        if options && (self.class.non_tag_components.include?(name) \
-                   && !(options.except(:wrap_with).keys.empty?))
-          warn "Invalid options #{options.except(:wrap_with).keys.inspect} passed to #{name}."
+        if options && (self.class.non_tag_components.include?(name)) \
+                   && (options.keys != [:wrap_with])
+          raise ArgumentError, "Invalid options #{options.except(:wrap_with).keys.inspect} passed to #{name}."
         end
        
         if options

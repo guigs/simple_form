@@ -6,13 +6,15 @@ module SimpleForm
       
       def initialize(name, options={})
         @wrapper_html_options = options.except(:wrap_with)
-        options = options[:wrap_with] || {}
-        super(name, [name], options)
+        super(name, [name], options.fetch(:wrap_with,{}))
       end
 
       def render(input)
         options = input.options
         if options[namespace] != false
+          #inputs store there html classes in a separate place from other tags
+          #or non-tag components - premerge them before collecting alll
+          #possible html_options
           if [:input, :label_input].include? namespace
             input.input_html_classes.concat Array.wrap(wrapper_html_options[:class])
             input.input_html_options.merge! wrapper_html_options.except(:class)
@@ -28,7 +30,12 @@ module SimpleForm
       private
 
       def html_options_for_input(input, local_namespace = namespace)
-        options = ( input.options["#{local_namespace}_html".intern] ||= {} )
+        # because there are a lot of different places where you can set classes
+        # on inputs (globally, on the individual input, in the form options, in
+        # the wrappers api, etc) we merge them all together here so that that 
+        # SimpleForm::Wrappers::Many#wrap know what do with them, taking care
+        # to leave options[:class] as an array if necessary
+        options = ( input.options["#{local_namespace}_html".to_sym] ||= {} )
         if options[:class] || wrapper_html_options[:class]
           options[:class] = Array.wrap(options[:class])
           options[:class].concat Array.wrap(wrapper_html_options[:class])

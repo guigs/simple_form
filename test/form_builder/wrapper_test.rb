@@ -188,15 +188,12 @@ class WrapperTest < ActionView::TestCase
     end
   end
 
-  test 'adding invalid options to non-tag components issues a warning but otherwise works' do
-    out, err = capture_io do
+  test 'adding invalid options to non-tag components raises an exception' do
+    assert_raise ArgumentError, "Invalid options [:class] passed to placeholder." do
       swap_wrapper :default, custom_wrapper_with_invalid_options do
         with_form_for @user, :name
-        assert_select "div.custom_wrapper input[name='user[name]']"
       end
     end
-    assert_match /Invalid options \[:class\] passed to placeholder./, err
-    assert_match /Invalid options \[(:id|:class), (:class|:id)\] passed to hint./, err
   end
 
   test 'do not duplicate label classes for different inputs' do
