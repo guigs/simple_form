@@ -176,15 +176,15 @@ class WrapperTest < ActionView::TestCase
     with_concat_form_for @user do |f|
       concat f.input :name, :invalid => 'thing'
     end
-    assert_no_select "input[invalid='thing']"
+    assert_no_select "input[invalid]"
   end
 
   test 'adding any option to tag components in wrapper makes html attributes' do
-    swap_wrapper :default, custom_wrapper_with_wrong_wrapping_tag do
+    swap_wrapper :default, custom_wrapper_with_wrapping_tag_and_invalid_attributes do
       with_input_for @user, :name, :string, :other_invalid => 'other_thing'
       assert_select "input[invalid='thing']"
       assert_select "input.input_class_yo"
-      assert_no_select "input[other_invalid='other_thing']"
+      assert_no_select "input[other_invalid]"
     end
   end
 

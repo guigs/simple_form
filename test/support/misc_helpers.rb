@@ -64,7 +64,7 @@ module MiscHelpers
     end
   end
 
-  def custom_wrapper_with_wrong_wrapping_tag
+  def custom_wrapper_with_wrapping_tag_and_invalid_attributes
     SimpleForm.build :tag => :div, :class => "custom_wrapper" do |b|
       b.use :input, :class => 'input_class_yo', :invalid => 'thing'
     end
