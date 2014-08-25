@@ -108,6 +108,17 @@ class User
     Column.new(attribute, column_type, limit)
   end
 
+  def has_attribute?(attribute)
+    case attribute.to_sym
+      when :name, :status, :password, :description, :age,
+        :credit_limit, :active, :born_at, :delivery_time,
+        :created_at, :updated_at, :lock_version, :home_picture,
+        :amount, :attempts, :action, :credit_card then true
+      else false
+    end
+  end
+
+
   def self.human_attribute_name(attribute)
     case attribute
       when 'name'
